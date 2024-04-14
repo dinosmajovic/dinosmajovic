@@ -1,0 +1,40 @@
+---
+title: "Tailwind vs styled-components"
+publishedAt: "2024-04-14"
+summary: "Tailwind is a tool that helps simplify code writing, promoting consistency, ease of maintenance, and improved efficiency in creating beautiful and user-friendly designs."
+---
+
+## Healthy constraints
+
+Tailwind is a set of design tokens that expand to utility classes. This makes it hard to not adhere to a pre-defined (by us) design system. You are always choosing values from a fixed set of options. While you can use arbitrary spacing, color, text size etc. it requires a lot more friction and, in PRs, sticks out like a sore thumb.
+
+With styled-components every new chunk of CSS you write is a blank canvas; there's nothing stopping you from using whatever values you want.
+
+## Context switching
+
+In pursuit of perceived 'separation of concerns', styled components are defined in a separate place from the HTML (JSX) markup. This means context switching between where you write your styles and where you write your HTML. It’s difficult to hunt them down, even if they are in the same 500-line-long file, but very often, these styled components are on the other side of the codebase.
+
+Naming a styled component `StyledDependantCard` and placing it in a separate file doesn’t introduce separation. It makes the css a dependency of your HTML + adds some insurance jargon for extra confusion.
+
+It is a little ugly and it takes a week or two to get used to, but the **~50% reduction in character count, not having to think about naming or creating separate files makes Tailwind noticeably faster to write and review.** This improved efficiency lets you focus on naming and structuring your React components instead of styled components.
+
+## Maintenance and refactoring
+
+We have done a lot of refactoring and porting over to the new repository and had some clear issues with styled-components. This is the point I could write most about, but since this doc is getting pretty big, I will mention just a few problems that Tailwind solves:
+
+- **Ordering styled components in a consistent and readable way**  
+  Inconsistent, hard and time-consuming. Some live next to the component, some live in another file, and some are in another folder entirely. This makes understanding what is used where very difficult.
+- **Deleting styled-components is scary**  
+  In a similar vain, you never know where they might be used or when you are safe to delete them. Our codebase is littered with dead components
+- **Never know the consequences**  
+  Upgrading and bug-fixing is difficult when it’s hard to tell what it affects.
+- **It’s not CSS**  
+  It might seem like you’re writing CSS, but you are not. styled-components are JS template strings that allow you to intertwine JS code into your CSS. The library does a lot of runtime magic to come up with browser-readable CSS. This makes it a bit tricky to refactor or move to a pure CSS solution (like Tailwind). We rely on an open source library to remain maintained, and if it doesn’t, we may need to do a top-to-bottom refactor. However, with Tailwind, it’s just a matter of copy-pasting the stylesheet.
+
+## Conclusion
+
+In conclusion, Tailwind helps us write simpler code that only does only what matters and, as a result, makes things people love. 😉
+
+Even though I could talk about the performance, server side rendering, editor autocompletion, linting, responsive design and the people behind tailwind (they have a book). I think the above four deserve to be talked about in more detail and relate to us as a company the most.
+
+To address some concerns around using it at a large scale / with large teams, here are some companies using Tailwind in prod (links to pages built with Tailwind): Netflix, OpenAI, NASA, Google, Microsoft, Github, Loom, Shopify, Planetscale
